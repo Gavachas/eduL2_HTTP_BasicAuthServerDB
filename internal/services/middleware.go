@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -18,7 +17,7 @@ func (app *application) BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 		user, pass, ok := req.BasicAuth()
 
 		if ok && verifyUserPass(app, user, pass) {
-			fmt.Fprintf(w, "Hello user!\n")
+			//fmt.Fprintf(w, "Hello user!\n")
 			newctx := context.WithValue(req.Context(), UserContextKey, user)
 			next.ServeHTTP(w, req.WithContext(newctx))
 		} else {

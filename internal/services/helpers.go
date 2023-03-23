@@ -1,16 +1,14 @@
 package services
 
 import (
-	"fmt"
 	"net/http"
-	"runtime/debug"
 )
 
 // Помощник serverError записывает сообщение об ошибке в errorLog и
 // затем отправляет пользователю ответ 500 "Внутренняя ошибка сервера".
 func (app *application) serverError(w http.ResponseWriter, err error) {
-	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
-	app.errorLog.Output(2, trace)
+	//trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
+	app.logger.Error(err.Error())
 
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
