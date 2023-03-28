@@ -29,3 +29,6 @@ func (r *Repository) InsertRulesRep(name string, user int) (int, error) {
 func (r *Repository) GetUserRulesRep(id int) (*UserRules, error) {
 	return r.drv.GetUserRules(id)
 }
+func (r *Repository) GetUserRegionRPCRep(id int) (string, error) {
+	return r.drv.GetUserRegionRPC(id)
+}

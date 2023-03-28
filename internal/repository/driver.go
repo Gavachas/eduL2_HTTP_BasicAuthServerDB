@@ -9,4 +9,5 @@ type Driver interface {
 	GetUserFirst() (int, error)
 	InsertRules(name string, user int) (int, error)
 	GetUserRules(id int) (*UserRules, error)
+	GetUserRegionRPC(id int) (string, error)
 }

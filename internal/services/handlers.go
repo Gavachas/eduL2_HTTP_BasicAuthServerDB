@@ -62,6 +62,12 @@ func (app *application) addIncident(w http.ResponseWriter, req *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	region, err := app.Rep.GetUserRegionRPCRep(user.Id)
+	if err != nil {
+
+		app.serverError(w, err)
+		return
+	}
 	if userRule.Name == "admin" {
 
 		inc, err := app.Rep.InsertIncidetRep("Admin make inc", user.Id)
@@ -71,7 +77,7 @@ func (app *application) addIncident(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		fmt.Fprintf(w, "Incident ID : %v \n", inc)
+		fmt.Fprintf(w, "%v Incident ID : %v \n", inc, region)
 	} else if userRule.Name == "user" {
 
 		inc, err := app.Rep.InsertIncidetRep("User make inc", user.Id)

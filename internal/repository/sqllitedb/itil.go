@@ -1,10 +1,15 @@
 package sqllitedb
 
 import (
+	"context"
 	"database/sql"
 	"eduL2_HTTP_BasicAuthServerDB/internal/repository"
 	"errors"
+	"fmt"
 	"log"
+
+	sample_grpc "github.com/Gavachas/grpc_sample/grpc_s"
+	"google.golang.org/grpc"
 )
 
 type ItilModel struct {
@@ -200,4 +205,26 @@ func (m *ItilModel) GetUserRules(id int) (*repository.UserRules, error) {
 	userRules.User = id
 	return userRules, nil
 
+}
+func (m *ItilModel) GetUserRegionRPC(id int) (string, error) {
+	opts := grpc.WithInsecure()
+
+	cc, err := grpc.Dial("localhost:4041", opts)
+	if err != nil {
+
+		log.Fatalf("could not connect: %v", err)
+	}
+	defer cc.Close() // Maybe this should be in a separate function and the error handled?
+
+	c := sample_grpc.NewItilServiceClient(cc)
+
+	// read Region
+	fmt.Println("Reading the region")
+	readRegionReq := &sample_grpc.GetUserRequest{Id: int32(id)}
+	readRegionRes, readRegionErr := c.GetUserRegion(context.Background(), readRegionReq)
+	if readRegionErr != nil {
+		log.Fatalf("Error happened while reading: %v \n", readRegionErr)
+	}
+
+	return readRegionRes.Name, nil
 }

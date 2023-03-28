@@ -56,8 +56,8 @@ func main() {
 	case "postgres":
 		{
 			//dsn = "postgres:159753@docker.for.mac.localhost/itil?sslmode=disable"
-			//dsn = "host=docker.for.mac.localhost user=postgres password=159753 dbname=itil sslmode=disable" // для докера
-			dsn = "user=postgres password=159753 dbname=itil sslmode=disable" // локально
+			dsn = "host=docker.for.mac.localhost user=postgres password=159753 dbname=itil sslmode=disable" // для докера
+			//dsn = "user=postgres password=159753 dbname=itil sslmode=disable" // локально
 			dbtype = "postgres"
 			drv, err = pgsql.NewDriver(dbtype, dsn)
 			if err != nil {
