@@ -2,6 +2,7 @@ package services
 
 import (
 	"eduL2_HTTP_BasicAuthServerDB/internal/repository"
+	"eduL2_HTTP_BasicAuthServerDB/internal/services/grpcclient"
 	"errors"
 	"fmt"
 	"net/http"
@@ -62,7 +63,7 @@ func (app *application) addIncident(w http.ResponseWriter, req *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	region, err := app.Rep.GetUserRegionRPCRep(user.Id)
+	region, err := grpcclient.GetUserRegion(user.Id)
 	if err != nil {
 
 		app.serverError(w, err)

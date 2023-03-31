@@ -18,48 +18,49 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var env string
+var env_dbtype, env_dsn string
 
 func main() {
 	var err error
-	var dbtype string
-	var dsn string
+
 	var drv repository.Driver
-	env = os.Getenv("ENVDBTYPE")
+	env_dbtype = os.Getenv("ENVDBTYPE")
+	env_dsn = os.Getenv("ENVDSN")
 
-	logger, _ := zap.NewProduction()
-
-	if env == "" {
-		env = "postgres"
+	if env_dbtype == "" {
+		env_dbtype = "postgres"
 	}
-	switch env {
+
+	switch env_dbtype {
 	case "mysql":
 		{
-			dsn = "root:159753@tcp(docker.for.mac.localhost:3306)/itil?parseTime=true" //для докера
-			//dsn = "root:159753@tcp(localhost:3306)/itil?parseTime=true" // локально
-			dbtype = "mysql"
-			drv, err = mysqlDB.NewDriver(dbtype, dsn)
+			if env_dsn == "" {
+				env_dsn = "root:159753@tcp(docker.for.mac.localhost:3306)/itil?parseTime=true" // для докера
+				//env_dsn = "root:159753@tcp(localhost:3306)/itil?parseTime=true" // локально
+			}
+			drv, err = mysqlDB.NewDriver(env_dbtype, env_dsn)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
-	case "sqlite":
+	case "sqlite3":
 		{
-			dsn = "./internal/database/itild.db"
-			//dsn = "./db/itild.db"
-			dbtype = "sqlite3"
-			drv, err = sqllitedb.NewDriver(dbtype, dsn)
+			if env_dsn == "" {
+				env_dsn = "./internal/database/itild.db" // для докера
+				//env_dsn = "./db/itild.db" // локально
+			}
+			drv, err = sqllitedb.NewDriver(env_dbtype, env_dsn)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
 	case "postgres":
 		{
-			//dsn = "postgres:159753@docker.for.mac.localhost/itil?sslmode=disable"
-			dsn = "host=docker.for.mac.localhost user=postgres password=159753 dbname=itil sslmode=disable" // для докера
-			//dsn = "user=postgres password=159753 dbname=itil sslmode=disable" // локально
-			dbtype = "postgres"
-			drv, err = pgsql.NewDriver(dbtype, dsn)
+			if env_dsn == "" {
+				env_dsn = "host=docker.for.mac.localhost user=postgres password=159753 dbname=itil sslmode=disable" // для докера
+				//env_dsn = "user=postgres password=159753 dbname=itil sslmode=disable" // локально
+			}
+			drv, err = pgsql.NewDriver(env_dbtype, env_dsn)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -71,8 +72,9 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
-	log.Println("Env  ", env, " dsn", dsn)
+	log.Println("Env  ", env_dbtype, " dsn", env_dsn)
 
+	logger, _ := zap.NewProduction()
 	//infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	rep := repository.NewRepository(drv)
