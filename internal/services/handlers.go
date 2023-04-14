@@ -17,7 +17,11 @@ func (app *application) home(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "Hello guest!\n")
 }
 func (app *application) logQuery(w http.ResponseWriter, req *http.Request) {
-
+	defer func() {
+		if r := recover(); r != nil {
+			app.logger.Error(r.(string))
+		}
+	}()
 	userContext, ok := req.Context().Value("user").(string)
 	if !ok {
 		app.serverError(w, errors.New("не найден user"))
@@ -42,6 +46,11 @@ func (app *application) logQuery(w http.ResponseWriter, req *http.Request) {
 
 }
 func (app *application) addIncident(w http.ResponseWriter, req *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.logger.Error(r.(string))
+		}
+	}()
 	if req.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
 		app.clientError(w, http.StatusMethodNotAllowed)
@@ -54,6 +63,26 @@ func (app *application) addIncident(w http.ResponseWriter, req *http.Request) {
 	}
 	user, err := app.Rep.GetUserByNameRep(userContext)
 	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	idSession, err := app.Session.Get("id")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	if idSession == nil {
+		err = fmt.Errorf("Error session id %v", user.Id)
+		app.serverError(w, err)
+		return
+	}
+	id, err := strconv.Atoi(idSession.(string))
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	if id != user.Id {
+		err = fmt.Errorf("Error session id %v", user.Id)
 		app.serverError(w, err)
 		return
 	}
@@ -93,6 +122,11 @@ func (app *application) addIncident(w http.ResponseWriter, req *http.Request) {
 
 }
 func (app *application) showIncident(w http.ResponseWriter, req *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.logger.Error(r.(string))
+		}
+	}()
 	userContext, ok := req.Context().Value("user").(string)
 	if !ok {
 		app.serverError(w, errors.New("не найден user"))

@@ -2,18 +2,21 @@ package services
 
 import (
 	"eduL2_HTTP_BasicAuthServerDB/internal/repository"
+	"eduL2_HTTP_BasicAuthServerDB/internal/services/sessiontoken"
 
 	"go.uber.org/zap"
 )
 
 type application struct {
-	logger *zap.Logger
-	Rep    *repository.Repository
+	logger  *zap.Logger
+	Rep     *repository.Repository
+	Session *sessiontoken.Session
 }
 
-func NewService(elogger *zap.Logger, rep *repository.Repository) *application {
+func NewService(elogger *zap.Logger, rep *repository.Repository, session *sessiontoken.Session) *application {
 	return &application{
-		logger: elogger,
-		Rep:    rep,
+		logger:  elogger,
+		Rep:     rep,
+		Session: session,
 	}
 }

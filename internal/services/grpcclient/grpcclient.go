@@ -26,6 +26,7 @@ func GetUserRegion(id int) (string, error) {
 	cc, err := grpc.Dial(portGRPC, opts)
 	if err != nil {
 		log.Fatalf("could not connect: %v", err)
+		return "", nil
 	}
 	defer cc.Close() // Maybe this should be in a separate function and the error handled?
 
@@ -39,6 +40,10 @@ func GetUserRegion(id int) (string, error) {
 		fmt.Printf("Error happened while reading: %v \n", readRegionErr)
 	}
 
+	if readRegionRes == nil {
+		return "", nil
+		fmt.Printf("Error happened while reading: %v \n", readRegionErr)
+	}
 	fmt.Printf("Region was read: %v \n", readRegionRes)
 	return readRegionRes.Name, nil
 

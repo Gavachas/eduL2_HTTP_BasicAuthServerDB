@@ -16,7 +16,7 @@ func (app *application) BasicAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		user, pass, ok := req.BasicAuth()
 
-		if ok && verifyUserPass(app, user, pass) {
+		if ok && verifyUserToken(app, user, pass) {
 			//fmt.Fprintf(w, "Hello user!\n")
 			newctx := context.WithValue(req.Context(), UserContextKey, user)
 			next.ServeHTTP(w, req.WithContext(newctx))
