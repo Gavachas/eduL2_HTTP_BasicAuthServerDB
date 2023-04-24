@@ -6,7 +6,7 @@ import (
 	"eduL2_HTTP_BasicAuthServerDB/internal/repository/pgsql"
 	"eduL2_HTTP_BasicAuthServerDB/internal/repository/sqllitedb"
 	"eduL2_HTTP_BasicAuthServerDB/internal/services"
-	"eduL2_HTTP_BasicAuthServerDB/internal/services/sessiontoken"
+	"eduL2_HTTP_BasicAuthServerDB/pkg/sessiontoken"
 
 	"log"
 	"net/http"

@@ -2,7 +2,7 @@ package services
 
 import (
 	"eduL2_HTTP_BasicAuthServerDB/internal/repository"
-	"eduL2_HTTP_BasicAuthServerDB/internal/services/sessiontoken"
+	"eduL2_HTTP_BasicAuthServerDB/pkg/sessiontoken"
 
 	"go.uber.org/zap"
 )
