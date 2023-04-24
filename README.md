@@ -1,5 +1,5 @@
 
-Собрать image в Docker
+Собрать image в Docker:
                 docker build -t go-webapp .
 
 Варианты запуска 
