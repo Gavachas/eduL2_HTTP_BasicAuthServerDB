@@ -18,4 +18,6 @@ Envirements
 Команда для добавления b просмотра инцидента под пользователем joe
                 curl--request POST --url http://localhost:4000/addIncident --header "Authorization: Basic am9lOjEyMzQ="
                 curl --request GET --url http://localhost:4000/showIncident?id=1 --header "Authorization: Basic am9lOjEyMzQ="
+                
+                
 
